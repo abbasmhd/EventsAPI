@@ -3,16 +3,13 @@ using EventsAPI.Models;
 using EventsAPI.Service;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using EventsAPI.Helpers;
 
 namespace EventsAPI.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    [Produces("application/json")]
     public class EventsController : ControllerBase
     {
         private readonly ILogger<EventsController> _logger;
@@ -43,7 +40,7 @@ namespace EventsAPI.Controllers
                 return Ok(result.Data);
             }
 
-            return BadRequest();
+            return BadRequest(result);
         }
 
         /// <summary>
@@ -59,7 +56,7 @@ namespace EventsAPI.Controllers
                 return Ok(result.Data);
             }
 
-            return BadRequest(result.Errors);
+            return BadRequest(result);
         }
 
         /// <summary>
@@ -68,7 +65,7 @@ namespace EventsAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> Post(EventModel model, CancellationToken cancellationToken = default)
         {
-            // Validatiion is handeled by the ValidationFilter.
+            // Validation is handeled by the ValidationFilter.
 
             var result = await _eventService.AddEvent(model, cancellationToken);
 
@@ -77,7 +74,7 @@ namespace EventsAPI.Controllers
                 return CreatedAtAction(nameof(Get), new { id = result.Data });
             }
 
-            return BadRequest(result.Errors);
+            return BadRequest(result);
         }
 
         /// <summary>
@@ -86,7 +83,7 @@ namespace EventsAPI.Controllers
         [HttpPut]
         public async Task<IActionResult> Put(EventModel model, CancellationToken cancellationToken = default)
         {
-            // Validatiion is handeled by the ValidationFilter.
+            // Validation is handeled by the ValidationFilter.
 
             var result = await _eventService.UpdateEvent(model, cancellationToken);
 
@@ -95,7 +92,7 @@ namespace EventsAPI.Controllers
                 return Ok(result.Data);
             }
 
-            return BadRequest(result.Errors);
+            return BadRequest(result);
         }
 
         /// <summary>
@@ -111,7 +108,7 @@ namespace EventsAPI.Controllers
                 return Ok();
             }
 
-            return BadRequest(result.Errors);
+            return BadRequest(result);
         }
     }
 }

@@ -33,6 +33,16 @@ namespace EventsAPI
 
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("localDb")));
 
+            services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(builder =>
+                {
+                    builder.WithOrigins("https://localhost:3000", "http://localhost:3000/")
+                           .AllowAnyHeader()
+                           .AllowAnyMethod();
+                });
+            });
+
             services.AddControllers(option => option.Filters.Add<ValidationFilter>())
                     .AddFluentValidation(configuration => configuration.RegisterValidatorsFromAssemblyContaining<Startup>());
 
@@ -56,6 +66,14 @@ namespace EventsAPI
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseCors(builder =>
+            {
+                builder
+                   .AllowAnyOrigin()
+                   .AllowAnyMethod()
+                   .AllowAnyHeader();
+            });
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();

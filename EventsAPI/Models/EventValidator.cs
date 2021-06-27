@@ -27,7 +27,7 @@ namespace EventsAPI.Models
             RuleFor(r => r.EndDate)
                .NotEmpty().WithMessage("End Date is required")
                .GreaterThan(r => r.StartDate)
-               .WithMessage("End date must after Start date");
+               .WithMessage("End date must be after Start date");
 
 
         }

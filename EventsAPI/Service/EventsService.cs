@@ -34,8 +34,8 @@ namespace EventsAPI.Service
             }
             catch (Exception exception)
             {
-
-                return Result<Guid>.Failure(exception.GetBaseException().Message);
+                var baseEx = exception.GetBaseException();
+                return Result<Guid>.Failure(new ErrorModel(baseEx.Source, baseEx.Message));
             }
         }
         public async Task<Result<EventModel>> UpdateEvent(EventModel request, CancellationToken cancellationToken)
@@ -46,7 +46,7 @@ namespace EventsAPI.Service
 
                 if (entity == null)
                 {
-                    return Result<EventModel>.Failure($"Event \"{request.Name}\" ({request.Id}) was not found.");
+                    throw new Exception($"Event \"{request.Name}\" ({request.Id}) was not found.");
                 }
 
                 entity.Name = request.Name;
@@ -61,7 +61,8 @@ namespace EventsAPI.Service
             }
             catch (Exception exception)
             {
-                return Result<EventModel>.Failure(exception.GetBaseException().Message);
+                var baseEx = exception.GetBaseException();
+                return Result<EventModel>.Failure(new ErrorModel(baseEx.Source, baseEx.Message));
             }
         }
 
@@ -73,7 +74,7 @@ namespace EventsAPI.Service
 
                 if (entity == null)
                 {
-                    return Result.Failure($"Event ({id}) was not found.");
+                    throw new Exception($"Event ({id}) was not found.");
                 }
 
                 _context.EventEntities.Remove(entity);
@@ -83,7 +84,8 @@ namespace EventsAPI.Service
             }
             catch (Exception exception)
             {
-                return Result.Failure(exception.GetBaseException().Message);
+                var baseEx = exception.GetBaseException();
+                return Result.Failure(new ErrorModel(baseEx.Source, baseEx.Message));
             }
         }
 
@@ -95,14 +97,15 @@ namespace EventsAPI.Service
 
                 if (entity == null)
                 {
-                    return Result<EventModel>.Failure($"Event ({id}) was not found.");
+                    throw new Exception($"Event ({id}) was not found.");
                 }
 
                 return _mapper.Map<EventModel>(entity);
             }
             catch (Exception exception)
             {
-                return Result<EventModel>.Failure(exception.GetBaseException().Message);
+                var baseEx = exception.GetBaseException();
+                return Result<EventModel>.Failure(new ErrorModel(baseEx.Source, baseEx.Message));
             }
 
         }
@@ -117,10 +120,9 @@ namespace EventsAPI.Service
             }
             catch (Exception exception)
             {
-                return Result<PaginatedList<EventModel>>.Failure(exception.GetBaseException().Message);
+                var baseEx = exception.GetBaseException();
+                return Result<PaginatedList<EventModel>>.Failure(new ErrorModel(baseEx.Source, baseEx.Message));
             }
-
-
         }
     }
 }
